@@ -10,6 +10,8 @@ import '../App.css'
 function Lecture({ lecture_id }) {
   //fetch list of keywords from api
   const [keywords, setKeywords] = useState([]);
+  const [showButton, setShowButton] = useState(false);
+  const [showButtonIndex, setShowButtonIndex] = useState(null);
 
   useEffect(() => {
     fetch(
@@ -21,10 +23,22 @@ function Lecture({ lecture_id }) {
     .catch((err) => console.log(err));
   }, []);
 
-  const wordButtons = keywords.map((word) =>(
+  const handleClick = (e) => {
+    e.preventDefault();
+    setShowButton(true);
+    setShowButtonIndex(Number(e.target.id));
+  }
+
+  const wordButtons = keywords.map((word, index) =>(
     <li style={{ marginTop: '1rem' }}>
-      <Button variant="primary">{word.keyword}</Button>
-      <p>{word.start_time}</p>
+      <Button 
+        id={index}
+        variant="primary"
+        onClick={(e) => handleClick(e)}
+      >
+        {word.keyword}
+      </Button>
+      {showButton && (showButtonIndex === index) && <p>Start time: {word.start_time}</p>}
     </li>
   ));
   
